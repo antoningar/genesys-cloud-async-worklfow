@@ -13,6 +13,9 @@ Then both flows are able to communicate by reading and editing participant datas
 # Aynchronous process
 ![](docs/asynchronous.png)
 
+# Pros - Cons
+![](docs/proscons.png)
+
 # Sample
 The Alpha company customer service's IVR  need to identify callers thanks to their calling number.  
 Alpha company just bought two other concurrent, Beta and Gamma. The three customer databases merge is planned for next year.  

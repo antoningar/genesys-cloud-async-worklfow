@@ -19,12 +19,3 @@ repo :
 
 
 
-
-positif :
-fluidite
-reduit le temps dans le svi
-
-negatif:
-complexite
-	debuggage
-	maintenabilite
