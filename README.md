@@ -1,5 +1,17 @@
 # genesys-cloud-async-worklfow
-A Genesys Async Workflow is a workflow used in a way of getting a 100% native Genesys Cloud method for doing some async tasks while letting customers to continue their journeys.
+A Genesys Async Workflow is a way of doing async tasks to let customers continue their journeys while tasks are executed. This is a 100% native Genesys Cloud method.
+
+# How it works
+An initial flow will launch another process which will run independently (a workflow here, to stay in a native Genesys Cloud environment).  
+Participant datas of the conversation will be the support of a bi-directionnal communication for both flows.  
+The conversation id is send by the initial flow in the workflow request body.  
+Then both flows are able to communicate by reading and editing participant datas of the current conversation.  
+
+# Synchronous process
+![](docs/synchronous.png)
+
+# Aynchronous process
+![](docs/asynchronous.png)
 
 # Sample
 The Alpha company customer service's IVR  need to identify callers thanks to their calling number.  
@@ -32,34 +44,25 @@ Using the Geness Async Workflow.
 Medium solution, without code, fully hosted on your Genesys Cloud organization.  
 The best user experience, the fully asynchronous process let your customer journey continue during the api calls.
 
-# How it works
-## Workflow
-The workflow need a conversationId as input data and the caller number.  
-It execution is independant of any other call flow.  
-The workflow will all REST calls, one after another.  
-
-The communication with the IVR flow will be done throught the conversation caller participant datas, thanks to the conversationId.  
-Setting participant datas allow the worklow to communicate it current state (ongoing, failed, success) and sent back the caller's identity after an identification success.
-
 ## Timeline
-## Inbound flow Launch the workflow
-The first step of the Genesys inbound flow is a REST call POST /api/v2/flow/execution/{workflowId} and in the body the conversationId and the caller number.    
+### 1. Inbound flow Launch the workflow
+The first step of the Genesys inbound flow is a REST call POST /api/v2/flow/execution/{workflowId}, with the conversationId and the caller number in the body.    
 This REST call  is a Genesys Cloud internal call, it will be extremly fast.  
 Then the caller continue his journey throught the call flow by asking the caller the reason of his call.  
-## Workflow start it execution
+### 2. Workflow start it execution
 Workflow is starting his execution.  
 Setting his status to ONGOING by updating a conversation caller participant data.
 The first REST calls done with caller number is not finding any result.
-## Inbound flow need the caller identity
+### 3. Inbound flow need the caller identity
 To get the caller identity, the flow is looking for the workflow status throught his own participant datas.  
 Status is ONGOING.  
 The caller continue his journey trhought the call flow by asking if this is the first time the caller issue occur.
-## Workflow found caller's identity
+### 4. Workflow found caller's identity
 Second api calls failed again, but the third hit a result.  
 Workflow add caller's identity into participant datas.  
 Finaly the workflow is setting his status to SUCCESS by updating the same participant data than earlier.
-## Inbound flow get caller's identity
+### 5. Inbound flow get caller's identity
 To get the caller identity, the flow is looking for the workflow status throught his own participant datas.  
 Status is SUCCESS.  
-Flow get caller identity thanks to others participant datas.  
+Flow get caller identity thanks to the others participant datas.  
 Custom user experience can begin.
