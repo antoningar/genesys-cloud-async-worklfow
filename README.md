@@ -7,47 +7,36 @@ Participant datas of the conversation will be the support of a bi-directionnal c
 The conversation id is send by the initial flow in the workflow request body.  
 Then both flows are able to communicate by reading and editing participant datas of the current conversation.  
 
-# Synchronous process
-![](docs/synchronous.png)
+# Sample - AI intention recongition
+By getting the STT from the caller in Genesys, you want your own IA to do the intention recognition.  
+However with a long sentences, a recognition can take more thab 5 secondes.  
+Instead of ask te caller to wait all this time, with an asynchronous workflow you use this seconds to interact with the caller.  
 
-# Aynchronous process
-![](docs/asynchronous.png)
+## Timeline - AI intention recongition
+### 1. Catch caller intention
+Intention is catch as text fron a Genesys Cloud inbound call flow.  
+### 2. Launch recognition workflow
+The initial flow execute the dedicated workflow thanks to a REST call POST /api/v2/flow/execution/{workflowId}, with the conversationId and the caller intention in the body.
+### 3. Recognition workflow talk to AI
+The workflow execute an REST call to the target AI asking for an intention recognition of based on caller's input.  
+It updates his status to ONGOING in conversation participant datas. 
+### 4. Customer journey continue
+Inbound call flow inform the caller an event is organize by the company next saturday for a charity.  
+Then it check in the participant datas if intention is found, but status is still ONGOING.  
+An other message with the more details about the event (hours, activities...).
+### 5. Workflow get AI response
+AI return claler intentions.  
+Workflow add the result in conversation's participant datas and set is status to SUCCESS.
+### 6. Customer journey can go throught the queue
+Inbound call flow see workflow status in SUCCESS.  
+Intention is catch, and the call can go to the corresponding queue.
 
-# Pros - Cons
-![](docs/proscons.png)
-
-# Sample
+# Sample - Multiple external calls
 The Alpha company customer service's IVR  need to identify callers thanks to their calling number.  
 Alpha company just bought two other concurrent, Beta and Gamma. The three customer databases merge is planned for next year.  
 To be able to identify the caller, now, I need to do three HTTP rest call to three different REST webservices.  
 
-## Option 1 : Data actions
-Do three api calls, with three data actions execute one after another.  
-Basic solution without any cost and easy to maintain.  
-But caller will need to wait a long time if they are into the third database or not in any of them.  
-Pro : Easy to create and maintain  
-Cons : terrible UX due to the waiting needed during this calls
-
-## Option 2 : Genesys Cloud Function
-Create a Genesys Cloud Function to parallelize this three calls.  
-Complex solution, webservice need to be coded, fully hosted on your Genesys Cloud organization.  
-Better user experience, a single api call is needed : the one to this function.
-Pro : better UX du to faster execution time
-Cons : need developper skills to create and maintain, customer need to wait the end of execution
-
-## Option 3 : Webservice
-Create a webservice to parallelize this three calls.  
-Complex solution, webservice need to be coded, deployed and maintened on an external infrastructure wich also need to be maintened.  
-Better user experience, still a single api call is needed and execution can be faster than a function (based on multiple factor)  
-Pro : the rest api call can be faster than a function  
-Cons : need developper skills to create and maintain the service, need skill to be able to maintain where the code is running
-
-## Option 4 : Genesys Async Workflow
-Using the Geness Async Workflow.  
-Medium solution, without code, fully hosted on your Genesys Cloud organization.  
-The best user experience, the fully asynchronous process let your customer journey continue during the api calls.
-
-## Timeline
+## Timeline - Multiple external calls
 ### 1. Inbound flow Launch the workflow
 The first step of the Genesys inbound flow is a REST call POST /api/v2/flow/execution/{workflowId}, with the conversationId and the caller number in the body.    
 This REST call  is a Genesys Cloud internal call, it will be extremly fast.  
@@ -69,3 +58,9 @@ To get the caller identity, the flow is looking for the workflow status throught
 Status is SUCCESS.  
 Flow get caller identity thanks to the others participant datas.  
 Custom user experience can begin.
+
+# Synchronous process
+![](docs/synchronous.png)
+
+# Aynchronous process
+![](docs/asynchronous.png)
