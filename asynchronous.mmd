@@ -1,0 +1,37 @@
+---
+config:
+  theme: redux-color
+---
+sequenceDiagram
+    participant CALLER
+    participant FLOW
+    participant DATAS as PARTICIPANTS DATA
+    participant PROCESS as ASYNC WORKFLOW
+
+    CALLER->>+FLOW: call reach genesys
+    activate CALLER
+    activate DATAS
+
+    FLOW-)+PROCESS: launch process
+
+    rect rgba(0,255,0,0.10)
+        note left of FLOW: SAVED TIME
+        PROCESS-)DATAS: set status ONGOING
+        FLOW->>DATAS: get result
+        DATAS-->>FLOW: status ONGOING
+
+        FLOW->>CALLER: continue journey
+        CALLER-->>FLOW: listen and react
+
+        PROCESS--)DATAS: set status SUCCESS
+        PROCESS--)-DATAS: set result
+    end
+
+    FLOW->>DATAS: get result
+    DATAS-->>FLOW: status SUCCESS return result
+    FLOW->>CALLER: continue journey
+
+
+    deactivate CALLER
+    deactivate FLOW
+    deactivate DATAS

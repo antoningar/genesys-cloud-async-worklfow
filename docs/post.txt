@@ -1,0 +1,11 @@
+Un appel à une IA générative dépasse très vite les 5 secondes.
+Ce sont 5 secondes où votre client attend... et s'impatiente.
+
+À attendre, par exemple, que Genesys Cloud demande à votre IA interne d'analyser ses intentions.
+Mais sans parler d'IA, ça peut aussi être 5 secondes à attendre d'être identifié via l'une de vos bases de données client.
+
+Pour y remédier, j'ai mis en place une solution pour faire de l'asynchrone.
+Nativement, 100% sur Genesys Cloud.
+Grâce à des flows qui communiquent entre eux via les participant datas de la conversation.
+
+Pour plus de détails je vous laisse venir vers moi directement, ou aller sur mon github :

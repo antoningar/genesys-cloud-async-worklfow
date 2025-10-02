@@ -1,0 +1,20 @@
+---
+config:
+  theme: redux-color
+---
+sequenceDiagram
+  participant CALLER
+  participant FLOW as INBOUND CALL FLOW
+  participant PROCESS
+  Note over PROCESS: can be: <br>Data Action,<br>Genesys Function,<br>Web Service...
+
+  CALLER ->>+ FLOW: call reach genesys
+  activate CALLER
+  activate FLOW
+  FLOW ->>+ PROCESS: launch process
+  rect rgba(255,20,20,0.15)
+    Note over CALLER, FLOW: <br><br>WAITING TIME LOST<br><br>
+  end
+  PROCESS -->>- FLOW: return result
+  FLOW ->>- CALLER: continue journey
+  deactivate CALLER
