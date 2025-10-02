@@ -1,13 +1,14 @@
 ---
 config:
   theme: redux-color
+  look: classic
+title: SYNCHRONOUS GENESYS WORKFLOW
 ---
 sequenceDiagram
   participant CALLER
   participant FLOW as INBOUND CALL FLOW
   participant PROCESS
   Note over PROCESS: can be: <br>Data Action,<br>Genesys Function,<br>Web Service...
-
   CALLER ->>+ FLOW: call reach genesys
   activate CALLER
   activate FLOW
